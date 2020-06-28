@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import Icon from './Icon'
 import City from './City'
-
 const Game = (props) =>
   useMemo(() => {
     const {
@@ -29,7 +28,7 @@ const Game = (props) =>
             <City
               city={cities[0]}
               isCorrect={
-                cities[0].temperature &&
+                cities[0].temperature !== null &&
                 cities[1].temperature &&
                 cities[0].temperature > cities[1].temperature
               }
@@ -51,7 +50,7 @@ const Game = (props) =>
             <City
               city={cities[1]}
               isCorrect={
-                cities[0].temperature &&
+                cities[0].temperature !== null &&
                 cities[1].temperature &&
                 cities[0].temperature < cities[1].temperature
               }

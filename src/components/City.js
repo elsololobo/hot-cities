@@ -15,11 +15,13 @@ const City = (props) =>
           }`}
         >
           <div className="card-body">
-            <h5 className="card-title">City Name: {city && city.name}</h5>
+            <h5 className="card-title">City Name: {(city || {}).name}</h5>
             <h6 className="card-subtitle mb-2 text-muted">
-              Country: {city && city.country}
+              Country: {(city || {}).country}
             </h6>
-            <p className="card-text">Temperature: {city.temperature}</p>
+            <p className="card-text">
+              Temperature: {city.temperature.toFixed(2)}
+            </p>
           </div>
         </div>
       </div>
