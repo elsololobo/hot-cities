@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 
 const City = (props) =>
   useMemo(() => {
-    const { city, isCorrect, onClick, submitted, loading } = props
+    const { city, isCorrect, onClick, submitted, loading, unit } = props
     return (
       <div className="col" onClick={() => (!submitted ? onClick(city.id) : {})}>
         <div
@@ -20,7 +20,8 @@ const City = (props) =>
               Country: {(city || {}).country}
             </h6>
             <p className="card-text">
-              Temperature: {city.temperature.toFixed(2)}
+              Temperature: {city.temperature}{' '}
+              {city.temperature ? (unit === 'metric' ? '℃' : '℉') : ''}
             </p>
           </div>
         </div>

@@ -1,16 +1,11 @@
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useReducer,
-  useState
-} from 'react'
+import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import cityList from './cities.json'
 import sampleSize from 'lodash.samplesize'
 import Header from './components/Header'
 import Game from './components/Game'
 import reducer, { gameActions, initialState } from './components/reducer'
 import fetchWeatherData from './api/weather.api'
+import Setting from './components/Setting'
 
 const navItems = [
   {
@@ -21,10 +16,9 @@ const navItems = [
   {
     name: 'setting',
     text: 'Setting',
-    component: ''
+    component: Setting
   }
 ]
-export const DispatcherContext = createContext((val) => val)
 const App = () => {
   const defaultState = initialState()
   const [active, setActive] = useState('game')
@@ -47,24 +41,34 @@ const App = () => {
         payload: sampleSize(cityList, 2)
       })
     } else {
-      const cities = state.cities
+      const { cities, unit, count } = state
       setLoading(true)
-      fetchWeatherData(cities[0].id, cities[1].id).then(
+      fetchWeatherData(cities[0].id, cities[1].id, unit).then(
         (res) => {
+          const correctCity =
+            res.list[0].main.temp > res.list[1].main.temp
+              ? res.list[0].id
+              : res.list[1].id
+          const temps = [res.list[0].main.temp, res.list[1].main.temp]
           dispatch({
             type: gameActions.setTemperatures,
-            payload: [res.list[0].main.temp, res.list[1].main.temp]
+            payload: temps
           })
           setLoading(false)
           setSelection((city) => {
             return {
               ...city,
-              correctCity:
-                res.list[0].main.temp > res.list[1].main.temp
-                  ? res.list[0].id
-                  : res.list[1].id
+              correctCity: correctCity
             }
           })
+          logMoves(
+            cities,
+            temps,
+            unit,
+            selection.chosenCity,
+            correctCity,
+            count
+          )
         },
         (err) => {
           setLoading(false)
@@ -75,13 +79,56 @@ const App = () => {
   }, [submitted])
 
   useEffect(() => {
-    if (selection && selection.chosenCity && selection.correctCity)
+    if (selection && selection.chosenCity && selection.correctCity) {
       setIsCorrect(selection.chosenCity === selection.correctCity)
+    }
   }, [selection])
 
   useEffect(() => {
     if (isCorrect) dispatch({ type: gameActions.addScore })
   }, [isCorrect])
+
+  useEffect(() => {
+    if (submitted) {
+      const { cities, unit, count } = state
+      setLoading(true)
+      fetchWeatherData(cities[0].id, cities[1].id, unit).then(
+        (res) => {
+          const temps = [res.list[0].main.temp, res.list[1].main.temp]
+          dispatch({
+            type: gameActions.setTemperatures,
+            payload: temps
+          })
+          setLoading(false)
+        },
+        (err) => {
+          setLoading(false)
+          console.log('error', err)
+        }
+      )
+    }
+  }, [state.unit])
+
+  const logMoves = (cities, temps, unit, chosen, correct, id) => {
+    const logItem = {
+      id: id,
+      city1: {
+        name: cities[0].name,
+        country: cities[0].country,
+        temperature: `${temps[0]} ${unit === 'metric' ? '℃' : '℉'}`,
+        selected: cities[0].id === chosen
+      },
+      city2: {
+        name: cities[1].name,
+        country: cities[1].country,
+        temperature: `${temps[1]} ${unit === 'metric' ? '℃' : '℉'}`,
+        selected: cities[1].id === chosen
+      },
+      isCorrect: chosen === correct
+    }
+    console.log('log', logItem)
+    dispatch({ type: gameActions.logMove, payload: logItem })
+  }
 
   const makeGuess = useCallback((cityId) => {
     setLoading(true)
@@ -101,19 +148,18 @@ const App = () => {
   }, [])
 
   return (
-    <DispatcherContext.Provider value={dispatch}>
-      <div className="App">
-        <Header navItems={navItems} active={active} onClick={setActive} />
-        <ActiveComponent
-          loading={loading}
-          {...state}
-          makeGuess={makeGuess}
-          submitted={submitted}
-          isCorrect={isCorrect}
-          nextCities={nextCities}
-        />
-      </div>
-    </DispatcherContext.Provider>
+    <div className="App">
+      <Header navItems={navItems} active={active} onClick={setActive} />
+      <ActiveComponent
+        {...state}
+        loading={loading}
+        makeGuess={makeGuess}
+        submitted={submitted}
+        isCorrect={isCorrect}
+        nextCities={nextCities}
+        dispatch={dispatch}
+      />
+    </div>
   )
 }
 

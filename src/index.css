@@ -13,9 +13,18 @@ code {
 }
 
 .row, .question {
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .card, .nav-link {
     cursor: pointer;
+}
+.zero-padding {
+    padding: 0 !important;
+}
+.custom-padding {
+    padding: 5px;
+}
+.custom-font-size {
+    font-size: 12px !important;
 }

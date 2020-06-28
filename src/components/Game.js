@@ -11,7 +11,8 @@ const Game = (props) =>
       submitted,
       makeGuess,
       isCorrect,
-      nextCities
+      nextCities,
+      unit
     } = props
     return (
       <div className="container">
@@ -35,6 +36,7 @@ const Game = (props) =>
               submitted={submitted}
               onClick={makeGuess}
               loading={loading}
+              unit={unit}
             />
           )}
           <div className="col-md-auto align-middle text-center align-self-center">
@@ -57,18 +59,15 @@ const Game = (props) =>
               submitted={submitted}
               onClick={makeGuess}
               loading={loading}
+              unit={unit}
             />
           )}
         </div>
         <div className="row justify-content-center">
-          {submitted && !loading && isCorrect && (
-            <h4 className="text-success">
-              Correct! <Icon isCorrect={true} width={25} height={25} />
-            </h4>
-          )}
-          {submitted && !loading && !isCorrect && (
-            <h4 className="text-danger">
-              Wrong! <Icon isCorrect={false} width={25} height={25} />
+          {submitted && !loading && (
+            <h4 className={`${isCorrect ? 'text-success' : 'text-danger'}`}>
+              {isCorrect ? 'Correct!' : 'Wrong!'}{' '}
+              <Icon isCorrect={isCorrect} width={25} height={25} />
             </h4>
           )}
         </div>

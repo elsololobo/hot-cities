@@ -7,7 +7,7 @@ const Header = (props) =>
       <header className="App-header">
         <nav className="navbar navbar-expand navbar-dark bg-dark">
           <div className="container">
-            <a className="navbar-brand" href="#">
+            <a className="navbar-brand" href="/">
               Hot Cities
             </a>
             <div className="" id="navbarSupportedContent">

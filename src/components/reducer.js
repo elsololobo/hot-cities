@@ -5,6 +5,7 @@ export const initialState = () => ({
   cities: [],
   unit: 'metric'
 })
+
 export const gameActions = {
   addScore: 'addScore',
   addCount: 'addCount',
