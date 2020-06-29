@@ -112,21 +112,18 @@ const App = () => {
   const logMoves = (cities, temps, unit, chosen, correct, id) => {
     const logItem = {
       id: id,
-      city1: {
-        name: cities[0].name,
-        country: cities[0].country,
-        temperature: `${temps[0]} ${unit === 'metric' ? '℃' : '℉'}`,
-        selected: cities[0].id === chosen
-      },
-      city2: {
-        name: cities[1].name,
-        country: cities[1].country,
-        temperature: `${temps[1]} ${unit === 'metric' ? '℃' : '℉'}`,
-        selected: cities[1].id === chosen
-      },
       isCorrect: chosen === correct
     }
-    console.log('log', logItem)
+    cities &&
+      cities.forEach((city, key) => {
+        let objKey = 'city' + (key + 1)
+        logItem[objKey] = {
+          name: city.name,
+          country: city.country,
+          temperature: `${temps[key]} ${unit === 'metric' ? '℃' : '℉'}`,
+          selected: city.id === chosen
+        }
+      })
     dispatch({ type: gameActions.logMove, payload: logItem })
   }
 
