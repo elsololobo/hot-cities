@@ -23,7 +23,7 @@ export default function reducer(state, action) {
     case gameActions.addCount:
       return { ...state, count: state.count + 1 }
     case gameActions.logMove:
-      return { ...state, history: history.push(action.payload) }
+      return { ...state, history: state.history.push(action.payload) }
     case gameActions.setCities:
       return { ...state, cities: [...action.payload] }
     case gameActions.changeUnit:
