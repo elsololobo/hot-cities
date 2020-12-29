@@ -1,6 +1,6 @@
 import { jsonRequest } from './apiRequest'
 
-const baseUrl = 'http://api.openweathermap.org/data/2.5/group?'
+const baseUrl = 'https://api.openweathermap.org/data/2.5/group?'
 const appId = 'e08925f8c257a60bae572679dfbda08e'
 export default function fetchWeatherData(city1Id, city2Id, unit) {
   return jsonRequest(
