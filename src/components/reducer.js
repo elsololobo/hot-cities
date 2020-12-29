@@ -17,27 +17,24 @@ export const gameActions = {
 }
 
 export default function reducer(state, action) {
-  let newState = { ...state }
   switch (action.type) {
     case gameActions.addScore:
-      return { ...newState, score: state.score + 1 }
+      return { ...state, score: state.score + 1 }
     case gameActions.addCount:
-      return { ...newState, count: state.count + 1 }
+      return { ...state, count: state.count + 1 }
     case gameActions.logMove:
-      newState.history.push(action.payload)
-      return { ...newState }
+      return { ...state, history: history.push(action.payload) }
     case gameActions.setCities:
-      newState.cities = [...action.payload]
-      return { ...newState }
+      return { ...state, cities: [...action.payload] }
     case gameActions.changeUnit:
-      return { ...newState, unit: action.payload }
+      return { ...state, unit: action.payload }
     case gameActions.setTemperatures:
-      let cities = newState.cities
+      let cities = [...state.cities]
       cities &&
         cities.forEach((city, index) => {
           city.temperature = action.payload[index]
         })
-      return { ...newState, cities: cities }
+      return { ...state, cities: cities }
     case gameActions.resetState:
       return initialState()
     default:
